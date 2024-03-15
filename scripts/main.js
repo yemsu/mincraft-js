@@ -8,6 +8,7 @@ const TERRAIN_SIZE = 32
 // just make everything is scaled appropriately
 renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize(window.innerWidth, window.innerHeight)
+renderer.setClearColor(0x80a0e0)
 document.body.appendChild(renderer.domElement)
 
 // camera setup
