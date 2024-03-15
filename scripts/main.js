@@ -1,6 +1,10 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import Stats from 'three/examples/jsm/libs/stats.module'
 import { World } from './world'
+
+const stats = new Stats()
+document.body.appendChild(stats.dom)
 
 // renderer setup
 const renderer = new THREE.WebGLRenderer()
@@ -50,6 +54,7 @@ function setupLights() {
 function animate() {
 	requestAnimationFrame(animate)
 	renderer.render(scene, camera)
+	stats.update()
 }
 
 window.addEventListener('resize', () => {
