@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 // renderer setup
 const renderer = new THREE.WebGLRenderer()
 
@@ -16,6 +16,8 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(2, 2, 2)
 camera.lookAt(0, 0, 0)
 
+const controls = new OrbitControls(camera, renderer.domElement)
+
 // Scene setup
 const scene = new THREE.Scene()
 // 형태
@@ -27,8 +29,6 @@ scene.add(cube)
 // Render loop
 function animate() {
   requestAnimationFrame(animate)
-  cube.rotation.x += 0.01
-  cube.rotation.y += 0.01
   renderer.render(scene, camera)
 }
 
@@ -37,5 +37,7 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
 })
+
+
 
 animate()
