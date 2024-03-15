@@ -10,31 +10,29 @@ document.body.appendChild(stats.dom)
 // renderer setup
 const renderer = new THREE.WebGLRenderer()
 
-const TERRAIN_SIZE = 32
-
 // just make everything is scaled appropriately
 renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize(window.innerWidth, window.innerHeight)
 renderer.setClearColor(0x80a0e0)
 document.body.appendChild(renderer.domElement)
 
-// camera setup
-const camera = new THREE.PerspectiveCamera(
-	75,
-	window.innerWidth / window.innerHeight,
-)
-camera.position.set(-TERRAIN_SIZE, TERRAIN_SIZE / 2, TERRAIN_SIZE)
-camera.lookAt(0, 0, 0)
-
-const controls = new OrbitControls(camera, renderer.domElement)
-controls.target.set(TERRAIN_SIZE / 2, 0, TERRAIN_SIZE / 2)
-controls.update()
-
 // Scene setup
 const scene = new THREE.Scene()
 const world = new World()
 world.generate()
 scene.add(world)
+
+// camera setup
+const camera = new THREE.PerspectiveCamera(
+	75,
+	window.innerWidth / window.innerHeight,
+)
+camera.position.set(-world.size.width, world.size.height / 2, world.size.width)
+camera.lookAt(0, 0, 0)
+
+const controls = new OrbitControls(camera, renderer.domElement)
+controls.target.set(world.size.width / 2, 0, world.size.width / 2)
+controls.update()
 
 function setupLights() {
 	// directional light는 태양과 같음. 얼마나 멀리있는지와 상관없이 intensity가 동일함함
