@@ -23,8 +23,6 @@ const scene = new THREE.Scene()
 // 형태
 const geometry = new THREE.BoxGeometry()
 const material = new THREE.MeshStandardMaterial({ color: 0x00d000 })
-const cube = new THREE.Mesh(geometry, material)
-scene.add(cube)
 
 function setupLights() {
 	// directional light는 태양과 같음. 얼마나 멀리있는지와 상관없이 intensity가 동일함함
@@ -42,6 +40,16 @@ function setupLights() {
 	scene.add(ambient)
 }
 
+function setupWorld(size) {
+	for (let x = 0; x < size; x++) {
+		for (let z = 0; z < size; z++) {
+			const cube = new THREE.Mesh(geometry, material)
+			cube.position.set(x, 0, z)
+			scene.add(cube)
+		}
+	}
+}
+
 // Render loop
 function animate() {
 	requestAnimationFrame(animate)
@@ -55,4 +63,5 @@ window.addEventListener('resize', () => {
 })
 
 setupLights()
+setupWorld(32)
 animate()
