@@ -22,9 +22,25 @@ const controls = new OrbitControls(camera, renderer.domElement)
 const scene = new THREE.Scene()
 // 형태
 const geometry = new THREE.BoxGeometry()
-const material = new THREE.MeshBasicMaterial({ color: 0x00d000 })
+const material = new THREE.MeshStandardMaterial({ color: 0x00d000 })
 const cube = new THREE.Mesh(geometry, material)
 scene.add(cube)
+
+function setupLights() {
+	// directional light는 태양과 같음. 얼마나 멀리있는지와 상관없이 intensity가 동일함함
+	const light1 = new THREE.DirectionalLight()
+	light1.position.set(1, 1, 1)
+	scene.add(light1)
+
+	const light2 = new THREE.DirectionalLight()
+	light2.position.set(-1, 1, -0.5)
+	scene.add(light2)
+
+	// ambient light는 확산광. directional light가 닿지않는 곳을 밝혀주기 위해 추가
+	const ambient = new THREE.AmbientLight()
+	ambient.intensity = 0.1
+	scene.add(ambient)
+}
 
 // Render loop
 function animate() {
@@ -38,4 +54,5 @@ window.addEventListener('resize', () => {
 	renderer.setSize(window.innerWidth, window.innerHeight)
 })
 
+setupLights()
 animate()
