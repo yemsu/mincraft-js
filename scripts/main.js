@@ -3,6 +3,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 // renderer setup
 const renderer = new THREE.WebGLRenderer()
 
+const TERRAIN_SIZE = 32
+
 // just make everything is scaled appropriately
 renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize(window.innerWidth, window.innerHeight)
@@ -13,10 +15,12 @@ const camera = new THREE.PerspectiveCamera(
 	75,
 	window.innerWidth / window.innerHeight,
 )
-camera.position.set(2, 2, 2)
+camera.position.set(-TERRAIN_SIZE, TERRAIN_SIZE / 2, TERRAIN_SIZE)
 camera.lookAt(0, 0, 0)
 
 const controls = new OrbitControls(camera, renderer.domElement)
+controls.target.set(TERRAIN_SIZE / 2, 0, TERRAIN_SIZE / 2)
+controls.update()
 
 // Scene setup
 const scene = new THREE.Scene()
@@ -63,5 +67,5 @@ window.addEventListener('resize', () => {
 })
 
 setupLights()
-setupWorld(32)
+setupWorld(TERRAIN_SIZE)
 animate()
