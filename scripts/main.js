@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 // renderer setup
 const renderer = new THREE.WebGLRenderer()
 
@@ -10,8 +10,8 @@ document.body.appendChild(renderer.domElement)
 
 // camera setup
 const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
+	75,
+	window.innerWidth / window.innerHeight,
 )
 camera.position.set(2, 2, 2)
 camera.lookAt(0, 0, 0)
@@ -28,16 +28,14 @@ scene.add(cube)
 
 // Render loop
 function animate() {
-  requestAnimationFrame(animate)
-  renderer.render(scene, camera)
+	requestAnimationFrame(animate)
+	renderer.render(scene, camera)
 }
 
 window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
+	camera.aspect = window.innerWidth / window.innerHeight
+	camera.updateProjectionMatrix()
+	renderer.setSize(window.innerWidth, window.innerHeight)
 })
-
-
 
 animate()
