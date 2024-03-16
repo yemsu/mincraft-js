@@ -14,6 +14,8 @@ export class World extends THREE.Group {
 	 */
 	data = []
 
+	threshold = 0.5
+
 	constructor(size = { width: 64, height: 32 }) {
 		super()
 		this.size = size
@@ -38,7 +40,7 @@ export class World extends THREE.Group {
 				const row = []
 				for (let z = 0; z < this.size.width; z++) {
 					row.push({
-						id: 1,
+						id: Math.random() > this.threshold ? 1 : 0,
 						instanceId: null, // null because we have not yet created our instance meshes yet
 					})
 				}
