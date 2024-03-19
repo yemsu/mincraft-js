@@ -38,7 +38,7 @@ export class World extends THREE.Group {
 		const rng = new RNG(this.params.seed)
 		this.initializeTerrain()
 		this.generateResources(rng)
-		// this.generateTerrain(rng)
+		this.generateTerrain(rng)
 		this.generateMeshes()
 	}
 
@@ -111,11 +111,11 @@ export class World extends THREE.Group {
 
 				// Fill in all blocks at or below the terrain height
 				for (let y = 0; y <= this.size.height; y++) {
-					if (y < height) {
+					if (y < height && this.getBlock(x, y, z).id === blocks.empty.id) {
 						this.setBlockId(x, y, z, blocks.dirt.id)
 					} else if (y === height) {
 						this.setBlockId(x, y, z, blocks.grass.id)
-					} else {
+					} else if (y > height) {
 						this.setBlockId(x, y, z, blocks.empty.id)
 					}
 				}
