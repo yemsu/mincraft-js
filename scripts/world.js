@@ -1,9 +1,10 @@
 import * as THREE from 'three'
 import { SimplexNoise } from 'three/examples/jsm/math/SimplexNoise.js'
 import { RNG } from './rng.js'
+import { blocks } from './blocks.js'
 
 const geometry = new THREE.BoxGeometry()
-const material = new THREE.MeshStandardMaterial({ color: 0x00d000 })
+const material = new THREE.MeshStandardMaterial()
 
 // group은 씬에 들어가는 object collection 같은 것
 export class World extends THREE.Group {
@@ -50,7 +51,7 @@ export class World extends THREE.Group {
 				const row = []
 				for (let z = 0; z < this.size.width; z++) {
 					row.push({
-						id: 0,
+						id: blocks.empty.id,
 						instanceId: null, // null because we have not yet created our instance meshes yet
 					})
 				}
@@ -87,8 +88,14 @@ export class World extends THREE.Group {
 				height = Math.max(0, Math.min(height, this.size.height))
 
 				// Fill in all blocks at or below the terrain height
-				for (let y = 0; y <= height; y++) {
-					this.setBlockId(x, y, z, 1)
+				for (let y = 0; y <= this.size.height; y++) {
+					if (y < height) {
+						this.setBlockId(x, y, z, blocks.dirt.id)
+					} else if (y === height) {
+						this.setBlockId(x, y, z, blocks.grass.id)
+					} else {
+						this.setBlockId(x, y, z, blocks.empty.id)
+					}
 				}
 			}
 		}
@@ -108,12 +115,14 @@ export class World extends THREE.Group {
 			for (let y = 0; y < this.size.height; y++) {
 				for (let z = 0; z < this.size.width; z++) {
 					const blockId = this.getBlock(x, y, z).id
+					const blockType = Object.values(blocks).find((b) => b.id === blockId)
 					const instanceId = mesh.count
 
 					if (blockId !== 0) {
 						// 0.5 더하는 이유: 블럭의 중심이 0,0,0이기 때문에 중심을 맞추기 위해 0.5를 더함
 						matrix.setPosition(x + 0.5, y + 0.5, z + 0.5)
 						mesh.setMatrixAt(instanceId, matrix)
+						mesh.setColorAt(instanceId, new THREE.Color(blockType.color))
 						this.setBlockInstanceId(x, y, z, instanceId)
 						mesh.count++
 					}
