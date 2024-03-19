@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { SimplexNoise } from 'three/examples/jsm/math/SimplexNoise.js'
+import { RNG } from './rng.js'
 
 const geometry = new THREE.BoxGeometry()
 const material = new THREE.MeshStandardMaterial({ color: 0x00d000 })
@@ -16,6 +17,7 @@ export class World extends THREE.Group {
 	data = []
 
 	params = {
+		seed: 0,
 		terrain: {
 			scale: 30, // number of hills
 			magnitude: 0.5, // size of hills
@@ -62,7 +64,10 @@ export class World extends THREE.Group {
 	 * Generate the world terrain data
 	 */
 	generateTerrain() {
-		const simplex = new SimplexNoise()
+		// random number generator로 seed를  설정하여 simplex noise에 전달하여 그에 따른 지형 생성
+		// ==> scale, magnitude, offset을 조정할때마다 새로운 지형을 생성했던 이전과 다르게 기존 지형은 유지되고 값만 변화
+		const rng = new RNG(this.params.seed)
+		const simplex = new SimplexNoise(rng)
 		for (let x = 0; x < this.size.width; x++) {
 			for (let z = 0; z < this.size.width; z++) {
 				// Compute the noise value at this x-z location
