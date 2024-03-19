@@ -35,8 +35,10 @@ export class World extends THREE.Group {
 	 * Generates the world data and meshes
 	 */
 	generate() {
+		const rng = new RNG(this.params.seed)
 		this.initializeTerrain()
-		this.generateTerrain()
+		this.generateResources(rng)
+		// this.generateTerrain(rng)
 		this.generateMeshes()
 	}
 
@@ -62,12 +64,32 @@ export class World extends THREE.Group {
 	}
 
 	/**
+	 * Generates the resources (coal, stone, etc.) for the world
+	 */
+	generateResources(rng) {
+		const simplex = new SimplexNoise(rng)
+		for (let x = 0; x < this.size.width; x++) {
+			for (let y = 0; y < this.size.height; y++) {
+				for (let z = 0; z < this.size.width; z++) {
+					const value = simplex.noise3d(
+						x / blocks.stone.scale.x,
+						y / blocks.stone.scale.y,
+						z / blocks.stone.scale.z,
+					)
+					if (value > blocks.stone.scarcity) {
+						this.setBlockId(x, y, z, blocks.stone.id)
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Generate the world terrain data
 	 */
-	generateTerrain() {
+	generateTerrain(rng) {
 		// random number generator로 seed를  설정하여 simplex noise에 전달하여 그에 따른 지형 생성
 		// ==> scale, magnitude, offset을 조정할때마다 새로운 지형을 생성했던 이전과 다르게 기존 지형은 유지되고 값만 변화
-		const rng = new RNG(this.params.seed)
 		const simplex = new SimplexNoise(rng)
 		for (let x = 0; x < this.size.width; x++) {
 			for (let z = 0; z < this.size.width; z++) {
