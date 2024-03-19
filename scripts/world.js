@@ -4,7 +4,6 @@ import { RNG } from './rng.js'
 import { blocks, resources } from './blocks.js'
 
 const geometry = new THREE.BoxGeometry()
-const material = new THREE.MeshStandardMaterial()
 
 // group은 씬에 들어가는 object collection 같은 것
 export class World extends THREE.Group {
@@ -131,22 +130,37 @@ export class World extends THREE.Group {
 	generateMeshes() {
 		this.clear()
 		const maxCount = this.size.width * this.size.width * this.size.height
-		const mesh = new THREE.InstancedMesh(geometry, material, maxCount)
-		mesh.count = 0 // current number of instances that we have
+
+		// Creating a lookup table where the key is the block id
+		const meshes = {}
+		Object.values(blocks)
+			.filter((blockType) => blockType.id !== blocks.empty.id)
+			.forEach((blockType) => {
+				const mesh = new THREE.InstancedMesh(
+					geometry,
+					blockType.material,
+					maxCount,
+				)
+				mesh.name = blockType.name
+				mesh.count = 0 // current number of instances that we have
+				meshes[blockType.id] = mesh
+			})
 
 		const matrix = new THREE.Matrix4() // store the position of each block
 		for (let x = 0; x < this.size.width; x++) {
 			for (let y = 0; y < this.size.height; y++) {
 				for (let z = 0; z < this.size.width; z++) {
 					const blockId = this.getBlock(x, y, z).id
-					const blockType = Object.values(blocks).find((b) => b.id === blockId)
+
+					if (blockId === blocks.empty.id) continue
+
+					const mesh = meshes[blockId]
 					const instanceId = mesh.count
 
-					if (blockId !== blocks.empty.id && !this.isBlockObscured(x, y, z)) {
+					if (!this.isBlockObscured(x, y, z)) {
 						// 0.5 더하는 이유: 블럭의 중심이 0,0,0이기 때문에 중심을 맞추기 위해 0.5를 더함
 						matrix.setPosition(x + 0.5, y + 0.5, z + 0.5)
 						mesh.setMatrixAt(instanceId, matrix)
-						mesh.setColorAt(instanceId, new THREE.Color(blockType.color))
 						this.setBlockInstanceId(x, y, z, instanceId)
 						mesh.count++
 					}
@@ -154,7 +168,7 @@ export class World extends THREE.Group {
 			}
 		}
 
-		this.add(mesh)
+		this.add(...Object.values(meshes))
 	}
 
 	/**
