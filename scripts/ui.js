@@ -1,5 +1,5 @@
 import GUI from 'lil-gui'
-import { blocks } from './blocks'
+import { blocks, resources } from './blocks'
 
 export function createUI(world) {
 	const gui = new GUI()
@@ -13,13 +13,17 @@ export function createUI(world) {
 	terrainFolder.add(world.params.terrain, 'magnitude', 0, 1).name('Magnitude')
 	terrainFolder.add(world.params.terrain, 'offset', 0, 1).name('Offset')
 
-	const resourcesFolder = gui.addFolder('Resources')
-	resourcesFolder.add(blocks.stone, 'scarcity', 0, 1).name('Scarcity')
+	resources.forEach((resource) => {
+		const resourcesFolder = gui.addFolder(`${resource.name} Resources`)
+		resourcesFolder
+			.add(blocks[resource.name], 'scarcity', 0, 1)
+			.name('Scarcity')
 
-	const scaleFolder = gui.addFolder('Scale')
-	scaleFolder.add(blocks.stone.scale, 'x', 10, 100).name('X Scale')
-	scaleFolder.add(blocks.stone.scale, 'y', 10, 100).name('Y Scale')
-	scaleFolder.add(blocks.stone.scale, 'z', 10, 100).name('Z Scale')
+		const scaleFolder = gui.addFolder(`${resource.name} Scale`)
+		scaleFolder.add(blocks[resource.name].scale, 'x', 10, 100).name('X Scale')
+		scaleFolder.add(blocks[resource.name].scale, 'y', 10, 100).name('Y Scale')
+		scaleFolder.add(blocks[resource.name].scale, 'z', 10, 100).name('Z Scale')
+	})
 
 	gui.onChange(() => {
 		world.generate()
