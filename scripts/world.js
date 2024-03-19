@@ -118,7 +118,7 @@ export class World extends THREE.Group {
 					const blockType = Object.values(blocks).find((b) => b.id === blockId)
 					const instanceId = mesh.count
 
-					if (blockId !== 0) {
+					if (blockId !== blocks.empty.id && !this.isBlockObscured(x, y, z)) {
 						// 0.5 더하는 이유: 블럭의 중심이 0,0,0이기 때문에 중심을 맞추기 위해 0.5를 더함
 						matrix.setPosition(x + 0.5, y + 0.5, z + 0.5)
 						mesh.setMatrixAt(instanceId, matrix)
@@ -189,5 +189,28 @@ export class World extends THREE.Group {
 			z >= 0 &&
 			z < this.size.width
 		)
+	}
+
+	isBlockObscured(x, y, z) {
+		const up = this.getBlock(x, y + 1, z)?.id ?? blocks.empty.id
+		const down = this.getBlock(x, y - 1, z)?.id ?? blocks.empty.id
+		const left = this.getBlock(x - 1, y, z)?.id ?? blocks.empty.id
+		const right = this.getBlock(x + 1, y, z)?.id ?? blocks.empty.id
+		const forward = this.getBlock(x, y, z + 1)?.id ?? blocks.empty.id
+		const back = this.getBlock(x, y, z - 1)?.id ?? blocks.empty.id
+
+		// if any of the block's sides is exposed, it is not obscured
+		if (
+			up === blocks.empty.id ||
+			down === blocks.empty.id ||
+			left === blocks.empty.id ||
+			right === blocks.empty.id ||
+			forward === blocks.empty.id ||
+			back === blocks.empty.id
+		) {
+			return false
+		} else {
+			return true
+		}
 	}
 }
