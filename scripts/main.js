@@ -63,10 +63,17 @@ function setupLights() {
 	scene.add(ambient)
 }
 // Render loop
+let previousTime = performance.now()
 function animate() {
+	let currentTime = performance.now()
+	let dt = (currentTime = previousTime) / 1000
+
 	requestAnimationFrame(animate)
+	player.applyInputs(dt)
 	renderer.render(scene, player.camera)
 	stats.update()
+
+	previousTime = currentTime
 }
 
 window.addEventListener('resize', () => {
