@@ -21,7 +21,7 @@ export class World extends THREE.Group {
 		terrain: {
 			scale: 30, // number of hills
 			magnitude: 0.5, // size of hills
-			offset: 0.8, // height
+			offset: 0.2, // height
 		},
 	}
 
