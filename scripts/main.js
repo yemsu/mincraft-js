@@ -83,5 +83,5 @@ window.addEventListener('resize', () => {
 })
 
 setupLights()
-createUI(world)
+createUI(world, player)
 animate()
