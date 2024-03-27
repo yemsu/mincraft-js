@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { World } from './world'
 import { createUI } from './ui'
+import { Player } from './player'
 
 const stats = new Stats()
 document.body.appendChild(stats.dom)
@@ -23,6 +24,8 @@ const scene = new THREE.Scene()
 const world = new World()
 world.generate()
 scene.add(world)
+
+const player = new Player(scene)
 
 // camera setup
 const camera = new THREE.PerspectiveCamera(
@@ -62,7 +65,7 @@ function setupLights() {
 // Render loop
 function animate() {
 	requestAnimationFrame(animate)
-	renderer.render(scene, camera)
+	renderer.render(scene, player.camera)
 	stats.update()
 }
 
